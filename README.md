@@ -8,7 +8,7 @@ This version has the same function and output as the original. The goal is less 
 - The only runtime dependency is cava. playerctl and jq are not necessary.
 - It runs cava only while music plays.
 
-In one test while music played, the total CPU use decreased from 15% to 0.6%. The memory use decreased from 8 MB to 5 MB.
+In one test while music played, the total CPU use decreased from 15% to 0.6%. The memory use decreased from 8 MB to 5 MB. See [benchmark.md](benchmark.md) for the method and all results.
 
 ## Requirements
 
@@ -20,6 +20,22 @@ In one test while music played, the total CPU use decreased from 15% to 0.6%. Th
 ## Install
 
 ### Nix
+
+To test caway without an installation, run it with `nix run`. It prints one JSON line for each update.
+
+```sh
+nix run github:mostlymaxi/caway-rs
+```
+
+To install caway into your user profile:
+
+```sh
+nix profile add github:mostlymaxi/caway-rs
+```
+
+Then set `"exec": "caway"` in the Waybar configuration. Older Nix versions call this command `nix profile install`.
+
+To use caway in a NixOS or Home Manager flake:
 
 1. Add the flake to the inputs of your flake:
 
@@ -33,6 +49,12 @@ In one test while music played, the total CPU use decreased from 15% to 0.6%. Th
    ```nix
    exec = lib.getExe inputs.caway.packages.${pkgs.stdenv.hostPlatform.system}.default;
    ```
+
+The flake also has an overlay that adds `pkgs.caway`:
+
+```nix
+nixpkgs.overlays = [ inputs.caway.overlays.default ];
+```
 
 The Nix package includes cava. You do not need to install cava separately.
 
